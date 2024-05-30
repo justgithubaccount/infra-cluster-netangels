@@ -3,6 +3,6 @@
   hosts: tst
   become: true
   roles:
-    # - docker
-    # - consul
+    - consul
+    - docker
     - nomad

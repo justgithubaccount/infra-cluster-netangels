@@ -1,45 +1,54 @@
-# welcome-nomad-consul
-> **Atention:** Крайне черновой вариант, закомиченный чтобы сохранить промежуточный этап, где поднят кластер номада и на всех нодах отдается «Mission Complete!»  
+# ff-consul-nomad
+> **Atention:** Крайне черновой вариант! Оформлю позже, пока так и паблике пусть повисит, да (так и было задуманно). Мб уйдут в локалку за nat... была бы не плохо более безопасней конечно сделать...
 > 
+> Первый коммит: закомичен чтобы сохранить промежуточный этап, где поднят кластер номада и на всех нодах отдается «Mission Complete!»  
+>
+> Второй коммит: nginx как сервис отображается в вэбке консула на 3 нодах 
+> http://80.87.104.168:8500/ui/dc1/services/nginx/instances  
+>
 > http://80.87.104.168:8080/  
 > http://80.87.104.39:8080/  
 > http://80.87.104.143:8080/  
 >
-> Осталось добавить консул и отладить плейбуки (роли, таски в ролях), сейчас плейбук поднимает кластер номада без вывалтвания в ошибку
+> Осталось ~~добавить консул~~ и отладить плейбуки (роли, таски в ролях), сейчас плейбук поднимает кластер номада без вываливания в ошибку
 > Питоновские обертки для хостинга (vds), какие-то куски ансибла взяты отсюда - https://gitlab.com/justgitlabaccount/snowsync-cfg-tst
 
-задание такое:  
+# задание такое 
 собрать тестовый consul+nomad кластер (из 3 слабых нод)
 внутри в контейнере запустить nginx  который показывает строку «Mission Complete!»
 
-Собрать все ноды в кластер  
-```consul join 192.168.0.2 192.168.0.3 192.168.0.4```   
-Проверить состояние Consul кластера  
+# welcome-consul
+**Собрать все ноды в кластер**  
+```consul join 192.168.0.2 192.168.0.3 192.168.0.4```  
+**Проверить состояние Consul кластера**  
 ```consul members```  
-```consul operator raft list-peers```    
-Вэбка консула - http://80.87.104.168:8500/ui/  
+```consul operator raft list-peers```  
+
+**Вэбка консула** - http://80.87.104.168:8500/ui/  
 
 # welcome-nomad
-Собрать все ноды в кластер   
-nomad server join 192.168.0.2 192.168.0.3 192.168.0.4  
-Проверить состояние Nomad кластера  
-nomad server members  
-nomad node status  
-nomad node status -self  
-Проверить плагин докера  
-nomad node status -self -verbose | grep docker  
+**Собрать все ноды в кластер**     
+```nomad server join 192.168.0.2 192.168.0.3 192.168.0.4```  
+**Проверить состояние Nomad кластера**  
+```nomad server members```  
+```nomad node status```  
+```nomad node status -self```  
+**Проверить плагин докера**  
+```nomad node status -self -verbose | grep docker```  
 
-https://developer.hashicorp.com/nomad/docs/drivers/docker#plugin-options
-https://developer.hashicorp.com/nomad/docs/configuration/plugin
+[Drivers: Docker | Nomad | HashiCorp Developer](https://developer.hashicorp.com/nomad/docs/drivers/docker#plugin-options)  
+[plugin Block - Agent Configuration | Nomad | HashiCorp Developer](https://developer.hashicorp.com/nomad/docs/configuration/plugin)  
 
-Службы  
-systemctl status nomad  
+**Службы**  
+```systemctl status nomad```    
 
-Проверить логи номада и докера  
-journalctl -u nomad -f  
-journalctl -u docker -f  
+**Проверить логи номада и докера**  
+```journalctl -u nomad -f```  
+```journalctl -u docker -f```  
+journalctl -u consul -f
 
-Вэбка номада - http://80.87.104.168:4646/ui/jobs  
+
+**Вэбка номада** - http://80.87.104.168:4646/ui/jobs  
 
 # CONSUL Services
 ### nginx.json (сервис)  
@@ -105,10 +114,13 @@ EOF
 ```
 Запуск задания  
 nomad job run nginx.nomad  
-
+Чек  
+nomad job status nginx
 
 root@vm-97c3da39:~# usermod -aG docker nomad  
 root@vm-97c3da39:~# systemctl restart nomad  
 
-Докер забнили
+Докер забанили внезапно походу дела  
 ```sudo sh -c 'echo "{"registry-mirrors": ["https://mirror.gcr.io", "https://daocloud.io", "https://c.163.com/", "https://huecker.io/", "https://registry.docker-cn.com"]}" >> /etc/docker/daemon.json'```
+
+### Вопросы

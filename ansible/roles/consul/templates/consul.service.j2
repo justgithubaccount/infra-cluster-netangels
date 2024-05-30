@@ -9,8 +9,8 @@ ExecStart=/usr/local/bin/consul agent -config-dir=/etc/consul.d
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=on-failure
-User=root
-Group=root
+User=consul
+Group=consul
 
 [Install]
 WantedBy=multi-user.target

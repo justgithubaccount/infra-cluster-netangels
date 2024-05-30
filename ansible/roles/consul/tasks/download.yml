@@ -1,0 +1,28 @@
+---
+- name: Download Consul
+  get_url:
+    url: "{{ consul_download_link }}"
+    dest: /tmp/consul.zip
+
+- name: Unzip Consul
+  unarchive:
+    src: /tmp/consul.zip
+    dest: /usr/local/bin/
+    remote_src: yes
+    mode: '0755'  
+
+- name: Verify Consul binary
+  stat:
+    path: /usr/local/bin/consul
+  register: consul_binary
+
+- name: Create symlink to consul binary
+  file:
+    src: /usr/local/bin/consul
+    dest: /usr/bin/consul
+    state: link
+    force: yes
+
+- name: Verify Consul installation
+  command: /usr/local/bin/consul --version
+  become: true

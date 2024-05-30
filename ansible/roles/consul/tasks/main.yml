@@ -1,72 +1,10 @@
 ---
-- name: Download Consul
-  get_url:
-    url: "{{ consul_download_link }}"
-    dest: /tmp/consul.zip
+- include_tasks: download.yml
+- include_tasks: config.yml
+- include_tasks: manage.yml
 
-- name: Unzip Consul
-  unarchive:
-    src: /tmp/consul.zip
-    dest: /usr/local/bin/
-    remote_src: yes
-    mode: '0755'  
-
-- name: Verify Consul binary
-  stat:
-    path: /usr/local/bin/consul
-  register: consul_binary
-
-- name: Create symlink to consul binary
-  file:
-    src: /usr/local/bin/consul
-    dest: /usr/bin/consul
-    state: link
-    force: yes
-
-- name: Verify Consul installation
-  command: /usr/local/bin/consul --version
-  become: true
-
-- name: Create Consul configuration directory
-  file:
-    path: /etc/consul.d
-    state: directory
-    mode: '0755'
-
-- name: Copy Consul configuration file
-  template:
-    src: consul.hcl.j2
-    dest: /etc/consul.d/consul.hcl
-  notify: Restart Consul
-
-- name: Create data directory for Consul
-  file:
-    path: /opt/consul
-    state: directory
-    mode: '0755'
-
-- name: Create Consul user
-  user:
+- name: Start Consul service
+  systemd:
     name: consul
-    home: /opt/consul
-    shell: /bin/false
-
-- name: Create Consul group
-  group:
-    name: consul
-
-- name: Change ownership of Consul data directory
-  file:
-    path: /opt/consul
-    owner: consul
-    group: consul
-    recurse: yes
-
-- name: Create systemd service file for Consul
-  template:
-    src: consul.service.j2
-    dest: /etc/systemd/system/consul.service
-    mode: '0644'
-  notify:
-    - Reload systemd
-    - Restart Consul
+    state: started
+    enabled: true

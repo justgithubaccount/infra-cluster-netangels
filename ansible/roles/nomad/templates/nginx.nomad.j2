@@ -28,6 +28,20 @@ EOF
         memory = 256
       }
 
+      # Регистрация сервиса в Consul
+      service {
+        name = "nginx"  # Имя сервиса в Consul
+        port = "http"   # Порт, который будет зарегистрирован в Consul
+
+        check {
+          name     = "nginx HTTP check"  # Имя проверки
+          type     = "http"              # Тип проверки (HTTP)
+          path     = "/"                 # Путь для проверки
+          interval = "10s"               # Интервал проверки
+          timeout  = "2s"                # Таймаут проверки
+        }
+      }
+
       env {
         NGINX_ROOT = "/usr/share/nginx/html"
       }
