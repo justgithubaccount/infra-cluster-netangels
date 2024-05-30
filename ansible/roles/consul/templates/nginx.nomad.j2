@@ -1,0 +1,43 @@
+job "nginx" {
+  datacenters = ["dc1"]
+
+  group "nginx" {
+    count = 3
+
+    task "nginx" {
+      driver = "docker"
+
+      config {
+        image = "nginx:latest"
+        ports = ["http"]
+        force_pull = false
+        volumes = [
+          "local/index.html:/usr/share/nginx/html/index.html"
+        ]
+      }
+
+      template {
+        data = <<-EOF
+        Mission Complete!
+        EOF
+        destination = "local/index.html"
+      }
+
+      resources {
+        cpu    = 500
+        memory = 256
+      }
+
+      env {
+        NGINX_ROOT = "/usr/share/nginx/html"
+      }
+    }
+
+    network {
+      port "http" {
+        static = 8080
+        to = 80
+      }
+    }
+  }
+}

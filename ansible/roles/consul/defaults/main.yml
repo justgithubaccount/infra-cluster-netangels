@@ -1,0 +1,1 @@
+consul_download_link: "https://hashicorp-releases.yandexcloud.net/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip"

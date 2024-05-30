@@ -1,0 +1,27 @@
+---
+- name: Create Nomad configuration directory
+  file:
+    path: /etc/nomad.d
+    state: directory
+    mode: '0755'
+
+- name: Copy Nomad configuration file
+  template:
+    src: nomad.hcl.j2
+    dest: /etc/nomad.d/nomad.hcl
+  notify: Restart Nomad
+
+- name: Create data directory for Nomad
+  file:
+    path: /opt/nomad
+    state: directory
+    mode: '0755'
+
+- name: Create systemd service file for Nomad
+  template:
+    src: nomad.service.j2
+    dest: /etc/systemd/system/nomad.service
+    mode: '0644'
+  notify:
+    - Reload systemd
+    - Restart Nomad

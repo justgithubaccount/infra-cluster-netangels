@@ -1,0 +1,28 @@
+---
+- name: Download Nomad
+  get_url:
+    url: "{{ nomad_download_link }}"
+    dest: /tmp/nomad.zip
+
+- name: Unzip Nomad
+  unarchive:
+    src: /tmp/nomad.zip
+    dest: /usr/local/bin/
+    remote_src: yes
+    mode: '0755'
+
+- name: Verify Nomad binary
+  stat:
+    path: /usr/local/bin/nomad
+  register: nomad_binary
+
+- name: Create symlink to Nomad binary
+  file:
+    src: /usr/local/bin/nomad
+    dest: /usr/bin/nomad
+    state: link
+    force: yes
+
+- name: Verify Nomad installation
+  command: /usr/local/bin/nomad --version
+  become: true

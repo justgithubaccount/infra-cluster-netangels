@@ -1,0 +1,3 @@
+---
+- ansible.builtin.include_tasks: setup_repo.yml
+- ansible.builtin.include_tasks: docker_engine.yml

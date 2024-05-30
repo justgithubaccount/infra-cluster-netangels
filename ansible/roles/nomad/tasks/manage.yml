@@ -1,0 +1,17 @@
+---
+- name: Create Nomad user
+  user:
+    name: nomad
+    home: /opt/nomad
+    shell: /bin/false
+
+- name: Create Nomad group
+  group:
+    name: nomad
+
+- name: Change ownership of Nomad data directory
+  file:
+    path: /opt/nomad
+    owner: nomad
+    group: nomad
+    recurse: yes

@@ -1,0 +1,79 @@
+---
+# Создание файла конфигурации для загрузки необходимых модулей ядра
+- name: Create /etc/modules-load.d/nomad.conf
+  copy:
+    dest: /etc/modules-load.d/nomad.conf
+    content: |
+      br_netfilter
+
+# Загрузка модуля br_netfilter
+- name: Load kernel modules
+  shell: |
+    modprobe br_netfilter
+
+# Установка параметра sysctl для net.bridge.bridge-nf-call-arptables
+- name: Ensure net.bridge.bridge-nf-call-arptables = 1
+  sysctl:
+    name: net.bridge.bridge-nf-call-arptables
+    value: 1
+    state: present
+    sysctl_set: yes
+
+# Установка параметра sysctl для net.bridge.bridge-nf-call-ip6tables
+- name: Ensure net.bridge.bridge-nf-call-ip6tables = 1
+  sysctl:
+    name: net.bridge.bridge-nf-call-ip6tables
+    value: 1
+    state: present
+    sysctl_set: yes
+
+# Установка параметра sysctl для net.bridge.bridge-nf-call-iptables
+- name: Ensure net.bridge.bridge-nf-call-iptables = 1
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: 1
+    state: present
+    sysctl_set: yes
+
+# Применение всех настроек sysctl
+- name: Ensure sysctl settings are applied
+  command: sysctl --system
+
+# Перезагрузка сервера для применения всех изменений
+- name: Reboot the server
+  reboot:
+    msg: "Rebooting after initial setup"
+    pre_reboot_delay: 10
+    post_reboot_delay: 60
+    reboot_timeout: 300
+
+# Ожидание завершения перезагрузки сервера и восстановления соединения
+- name: Wait for the server to come back
+  wait_for_connection:
+    connect_timeout: 5
+    sleep: 5
+    delay: 10
+    timeout: 300
+
+# Проверка, загружен ли модуль br_netfilter
+- name: Check if br_netfilter module is loaded
+  shell: lsmod | grep br_netfilter
+  register: br_netfilter_result
+  failed_when: br_netfilter_result.rc != 0
+  ignore_errors: true
+
+# Проверка настроек sysctl
+- name: Check sysctl settings
+  shell: sysctl net.bridge.bridge-nf-call-arptables net.bridge.bridge-nf-call-ip6tables net.bridge.bridge-nf-call-iptables
+  register: sysctl_result
+
+# Вывод результатов проверки загрузки модулей
+- name: Print module load results
+  debug:
+    msg:
+      - "br_netfilter loaded: {{ br_netfilter_result.stdout }}"
+
+# Вывод результатов проверки настроек sysctl
+- name: Print sysctl results
+  debug:
+    msg: "{{ sysctl_result.stdout }}"

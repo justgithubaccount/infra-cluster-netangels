@@ -1,0 +1,37 @@
+---
+- name: Ensure /etc/apt/keyrings directory exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+
+- name: Download Docker GPG key
+  get_url:
+    url: https://download.docker.com/linux/debian/gpg
+    dest: /tmp/docker-apt-keyring.gpg
+    mode: '0644'
+
+- name: Convert Docker GPG key to dearmored format
+  command: gpg --dearmor -o /etc/apt/keyrings/docker-apt-keyring.gpg /tmp/docker-apt-keyring.gpg
+  args:
+    creates: /etc/apt/keyrings/docker-apt-keyring.gpg
+
+- name: Remove temporary Docker GPG key file
+  file:
+    path: /tmp/docker-apt-keyring.gpg
+    state: absent
+
+- name: Ensure the GPG key is present
+  ansible.builtin.apt_key:
+    file: /etc/apt/keyrings/docker-apt-keyring.gpg
+    state: present
+
+- name: Add Docker repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker-apt-keyring.gpg] https://download.docker.com/linux/debian bookworm stable"
+    state: present
+    filename: 'docker'
+
+- name: Update apt package index
+  apt:
+    update_cache: yes

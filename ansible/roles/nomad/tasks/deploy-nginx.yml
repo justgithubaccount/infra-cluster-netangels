@@ -1,0 +1,10 @@
+---
+- name: Create Nginx job file for Nomad
+  template:
+    src: nginx.nomad.j2
+    dest: /tmp/nginx.nomad
+  run_once: true
+
+- name: Run Nginx job on Nomad
+  command: nomad run /tmp/nginx.nomad
+  run_once: true

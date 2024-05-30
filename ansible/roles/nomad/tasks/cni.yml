@@ -1,0 +1,17 @@
+---
+- name: Download CNI plugins
+  get_url:
+    url: "{{ cni_pligins }}"
+    dest: /tmp/cni-plugins.tgz
+
+- name: Create directory for CNI plugins
+  file:
+    path: /opt/cni/bin
+    state: directory
+    mode: '0755'
+
+- name: Extract CNI plugins
+  unarchive:
+    src: /tmp/cni-plugins.tgz
+    dest: /opt/cni/bin
+    remote_src: yes

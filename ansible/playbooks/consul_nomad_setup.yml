@@ -1,0 +1,8 @@
+---
+- name: Setup Consul and Nomad Cluster
+  hosts: tst
+  become: true
+  roles:
+    # - docker
+    # - consul
+    - nomad

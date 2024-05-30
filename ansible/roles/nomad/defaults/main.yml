@@ -1,0 +1,2 @@
+nomad_download_link: "https://hashicorp-releases.yandexcloud.net/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip"
+cni_pligins: "https://github.com/containernetworking/plugins/releases/download/v1.5.0/cni-plugins-linux-amd64-v1.5.0.tgz"

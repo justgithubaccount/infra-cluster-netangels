@@ -1,0 +1,25 @@
+---
+- name: Install Docker Engine
+  apt:
+    name: docker-ce
+    state: present
+
+- name: Ensure user {{ srv_service_user }} is added to the docker group
+  ansible.builtin.user:
+    name: nomad
+    groups: docker
+    append: yes
+
+- name: Create Docker daemon.json with mirror configuration
+  copy:
+    dest: /etc/docker/daemon.json
+    content: |
+      {
+        "registry-mirrors": ["https://mirror.gcr.io"]
+      }
+
+- name: Ensure Docker is started and enabled
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
