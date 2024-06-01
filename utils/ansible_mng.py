@@ -1,6 +1,8 @@
 import os
 import subprocess
 
+from api.net_mng import get_vm_lan_ip
+
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
 
 # Определяем путь к файлу инвентаря на основе типа среды
@@ -14,24 +16,27 @@ def get_inventory_path(env_type):
     inventory_file = f'{env_type}.ini'
     return os.path.join(project_root, f'ansible/inventory/{inventory_file}')
 
-def update_inventory(vm_name, vm_ip, env_type):
+def update_inventory(api_token, vm_name, vm_ip, vm_type, env_type):
+    print(f"update_inventory called with: vm_name={vm_name}, vm_ip={vm_ip}, vm_type={vm_type}, env_type={env_type}")
     inventory_path = get_inventory_path(env_type)
+    vm_lan_ip = get_vm_lan_ip(api_token, vm_name)
+    section = f"nomad_consul_{vm_type}s"
 
     # Проверка существования файла и создание, если необходимо
     if not os.path.exists(inventory_path):
         with open(inventory_path, 'w') as file:
-            file.write(f"[{env_type}]\n")  # Создание новой секции для среды
+            file.write(f"[{section}]\n")
     
     # Проверяем, есть ли уже такая запись
     with open(inventory_path, 'r+') as file:
         inventory_contents = file.readlines()
-        entry = f'{vm_name} ansible_host={vm_ip}\n'
+        entry = f'{vm_name} ansible_host={vm_ip} internal_ip={vm_lan_ip}\n'
         section_found = False
         entry_found = False
         
         # Проверяем, существует ли раздел и запись
         for line in inventory_contents:
-            if line.strip() == f'[{env_type}]':
+            if line.strip() == f'[{section}]':
                 section_found = True
             if entry.strip() == line.strip():
                 entry_found = True
@@ -42,7 +47,7 @@ def update_inventory(vm_name, vm_ip, env_type):
             file.write(entry)
         # Если раздел не найден, добавляем раздел и запись
         elif not section_found:
-            file.write(f'\n[{env_type}]\n')
+            file.write(f'\n[{section}]\n')
             file.write(entry)
 
 def run_playbook(env_type, name_playbook):

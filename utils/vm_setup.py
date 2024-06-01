@@ -3,7 +3,7 @@ from api.net_mng import add_to_local_net
 
 from utils.ansible_mng import update_inventory
 
-def setup_vm(token, vm_name, vm_tariff, vm_disk_size, vm_image, is_backup_enabled, env_type):
+def setup_vm(token, vm_name, vm_tariff, vm_disk_size, vm_image, is_backup_enabled):
     try:
         vm_data = create_vm(token, vm_name, vm_tariff, vm_disk_size, vm_image, is_backup_enabled)
 
@@ -20,7 +20,7 @@ def setup_vm(token, vm_name, vm_tariff, vm_disk_size, vm_image, is_backup_enable
 
         if is_vm_ready(token, vm_id):  # Проверяем, готова ли VM
             add_to_local_net(token, vm_name)
-            update_inventory(vm_name, vm_ip, env_type)  # Обновляем инветори файл
+            # update_inventory(token, vm_name, vm_ip, env_type)  # Обновляем инветори файл
             return vm_data
         else:
             print("VM is not ready in specified timeout")

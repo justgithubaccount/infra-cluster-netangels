@@ -1,0 +1,6 @@
+- name: Deploy Consul client configuration
+  template:
+    src: consul_client.hcl.j2
+    dest: "{{ config_dir }}/consul_client.hcl"
+  notify:
+    - Restart Consul

@@ -1,26 +1,26 @@
 job "nginx" {
-  datacenters = ["dc1"]
+  datacenters = ["dc1"] # Указывает датацентр, в котором будет выполняться задание
 
   group "nginx" {
-    count = 3
+    count = 3 # Определяет количество экземпляров группы задач
 
     task "nginx" {
-      driver = "docker"
+      driver = "docker" # Указывает, что для выполнения задачи используется Docker
 
       config {
-        image = "nginx:latest"
-        ports = ["http"]
-        force_pull = false
+        image = "nginx:latest" # Используемый образ Docker
+        ports = ["http"] # Определяет порт с меткой "http", который будет открыт в контейнере
+        force_pull = false # Указывает, что образ не будет загружаться повторно, если он уже есть локально
         volumes = [
-          "local/index.html:/usr/share/nginx/html/index.html"
+          "local/index.html:/usr/share/nginx/html/index.html" # Монтирует файл local/index.html в контейнер
         ]
       }
 
       template {
         data = <<-EOF
-Mission Complete!
+        Mission Complete!
 EOF
-        destination = "local/index.html"
+        destination = "local/index.html" # Путь, куда будет записан файл
       }
 
       resources {
@@ -30,20 +30,20 @@ EOF
 
       # Регистрация сервиса в Consul
       service {
-        name = "nginx"  # Имя сервиса в Consul
-        port = "http"   # Порт, который будет зарегистрирован в Consul
+        name = "nginx" # Имя сервиса в Consul
+        port = "http"  # Порт, который будет зарегистрирован в Consul
 
         check {
-          name     = "nginx HTTP check"  # Имя проверки
-          type     = "http"              # Тип проверки (HTTP)
-          path     = "/"                 # Путь для проверки
-          interval = "10s"               # Интервал проверки
-          timeout  = "2s"                # Таймаут проверки
+          name     = "nginx HTTP check" # Имя проверки состояния
+          type     = "http"             # Тип проверки - HTTP
+          path     = "/"                # Путь для HTTP-запроса проверки состояния
+          interval = "10s"              # Интервал между проверками - 10 секунд
+          timeout  = "2s"               # Таймаут для каждой проверки - 2 секунды
         }
       }
 
       env {
-        NGINX_ROOT = "/usr/share/nginx/html"
+        NGINX_ROOT = "/usr/share/nginx/html" # Переменная окружения, указывающая на корневую директорию nginx
       }
     }
 

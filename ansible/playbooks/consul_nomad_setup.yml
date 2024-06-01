@@ -1,8 +1,31 @@
 ---
 - name: Setup Consul and Nomad Cluster
-  hosts: tst
+  hosts: localhost
+  tasks:
+    - name: Gather all internal IPs for retry_join
+      set_fact:
+        retry_join_ips: >-
+          {{
+            (
+              groups['nomad_consul_servers'] | map('extract', hostvars, 'internal_ip') | list
+              + groups['nomad_consul_clients'] | map('extract', hostvars, 'internal_ip') | list
+            )
+          }}
+
+    - name: Output retry_join_ips for debugging
+      debug:
+        msg: "retry_join_ips: {{ retry_join_ips }}"
+
+    - name: Set retry_join_ips globally
+      add_host:
+        name: "{{ item }}"
+        retry_join_ips: "{{ retry_join_ips }}"
+      with_items: "{{ groups['all'] }}"
+
+- name: Setup Consul and Nomad Cluster
+  hosts: nomad_consul_servers, nomad_consul_clients
   become: true
   roles:
     - consul
-    - docker
-    - nomad
+    # - docker
+    # - nomad

@@ -1,0 +1,10 @@
+---
+- name: Create Consul user
+  user:
+    name: "{{ svc_user }}"
+    home: "{{ data_dir }}"
+    shell: /bin/false
+
+- name: Create Consul group
+  group:
+    name: "{{ svc_group }}"

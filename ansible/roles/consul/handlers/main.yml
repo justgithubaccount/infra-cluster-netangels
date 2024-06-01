@@ -6,4 +6,4 @@
   systemd:
     name: consul
     state: restarted
-    enabled: yes
+    enabled: true

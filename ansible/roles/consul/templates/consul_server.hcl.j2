@@ -1,0 +1,15 @@
+datacenter = "dc1"
+data_dir = "{{ data_dir }}"
+log_level = "{{ log_level }}"
+node_name = "{{ inventory_hostname }}"
+server = true
+bootstrap_expect = 3
+
+bind_addr = "{{ internal_ip }}"
+client_addr = "0.0.0.0"
+
+retry_join = ["192.168.0.1", "192.168.0.2", "192.168.0.3", "192.168.0.4", "192.168.0.5"]
+
+ui_config {
+    enabled = true
+}

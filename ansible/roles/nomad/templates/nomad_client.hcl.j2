@@ -1,0 +1,30 @@
+datacenter = "dc1"
+data_dir = "/opt/nomad"
+log_level = "DEBUG"
+name = "{{ inventory_hostname }}"
+
+bind_addr = "0.0.0.0"
+
+server {
+  enabled = false
+}
+
+client {
+  enabled = true
+}
+
+plugin "docker" {
+  config {
+    endpoint = "unix:///var/run/docker.sock"
+    allow_privileged = true
+  }
+}
+
+plugin "cni" {
+  config {
+    cni_path = "/opt/cni/bin"
+    cni_config_dir = "/etc/cni/net.d"
+  }
+}
+
+retry_join = [{{ retry_join_ips | join(', ') }}]

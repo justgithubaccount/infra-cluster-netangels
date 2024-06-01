@@ -11,16 +11,13 @@ server {
 }
 
 client {
-  enabled = true
+  enabled = false
 }
 
 plugin "docker" {
   config {
     endpoint = "unix:///var/run/docker.sock"
     allow_privileged = true
-    volumes {
-      enabled = true
-    }
   }
 }
 
@@ -30,3 +27,5 @@ plugin "cni" {
     cni_config_dir = "/etc/cni/net.d"
   }
 }
+
+retry_join = [{{ retry_join_ips | join(', ') }}]

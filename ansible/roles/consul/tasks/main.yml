@@ -1,9 +1,25 @@
 ---
-- include_tasks: download.yml
-- include_tasks: config.yml
-- include_tasks: manage.yml
+- name: Download and install Consul binary 
+  include_tasks: bin_install.yml
 
-- name: Start Consul service
+- name: Create user and group for Consul
+  include_tasks: indentity_create.yml
+  
+- name: Create config and data directory for Consul
+  include_tasks: dir_create.yml
+
+- name: Create server config for Consul
+  include_tasks: server_setup.yml
+  when: "'nomad_consul_servers' in group_names"
+
+- name: Create client config for Consul
+  include_tasks: client_setup.yml
+  when: "'nomad_consul_clients' in group_names"
+
+- name: Setup systemd service for Consul 
+  include_tasks: service_setup.yml
+
+- name: Start Consul
   systemd:
     name: consul
     state: started

@@ -1,0 +1,19 @@
+---
+- name: Create Consul configuration directory
+  file:
+    path: "{{ config_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Create data directory for Consul
+  file:
+    path: "{{ data_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Change ownership of Consul data directory
+  file:
+    path: "{{ data_dir }}"
+    owner: "{{ svc_user }}"
+    group: "{{ svc_group }}"
+    recurse: yes
