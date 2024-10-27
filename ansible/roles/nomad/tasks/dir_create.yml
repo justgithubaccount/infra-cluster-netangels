@@ -5,12 +5,6 @@
     state: directory
     mode: '0755'
 
-- name: Copy Nomad configuration file
-  template:
-    src: nomad.hcl.j2
-    dest: /etc/nomad.d/nomad.hcl
-  notify: Restart Nomad
-
 - name: Create data directory for Nomad
   file:
     path: /opt/nomad

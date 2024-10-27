@@ -1,8 +1,25 @@
 ---
-- include_tasks: download.yml
+- name: Download and install Nomad binary 
+  include_tasks: bin_install.yml
+
 - include_tasks: bridge-nf.yml
 - include_tasks: cni.yml
-- include_tasks: config.yml
-- include_tasks: manage.yml
+
+- name: Create user and group for Nomad
+  include_tasks: indentity_create.yml
+
+- name: Create config and data directory for Nomad
+  include_tasks: dir_create.yml
+
+- name: Create server config for Nomad
+  include_tasks: server_setup.yml
+  when: "'nomad_consul_servers' in group_names"
+
+- name: Create client config for Nomad
+  include_tasks: client_setup.yml
+  when: "'nomad_consul_clients' in group_names"
+
+- name: Setup systemd service for Nomad 
+  include_tasks: service_setup.yml
+
 - include_tasks: join-cluster.yml
-- include_tasks: deploy-nginx.yml

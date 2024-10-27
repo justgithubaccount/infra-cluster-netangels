@@ -1,0 +1,6 @@
+- name: Deploy Nomad server configuration
+  template:
+    src: nomad_server.hcl.j2
+    dest: "{{ config_dir }}/nomad_server.hcl"
+  notify:
+    - Restart Nomad

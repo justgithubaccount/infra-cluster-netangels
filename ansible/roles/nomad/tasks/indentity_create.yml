@@ -9,9 +9,9 @@
   group:
     name: nomad
 
-- name: Change ownership of Nomad data directory
-  file:
-    path: /opt/nomad
-    owner: nomad
-    group: nomad
-    recurse: yes
+# - name: Change ownership of Nomad data directory
+#   file:
+#     path: /opt/nomad
+#     owner: nomad
+#     group: nomad
+#     recurse: yes

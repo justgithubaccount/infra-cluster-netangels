@@ -1,0 +1,6 @@
+- name: Deploy Consul client configuration
+  template:
+    src: nomad_client.hcl.j2
+    dest: "{{ config_dir }}/nomad_client.hcl"
+  notify:
+    - Restart Nomad

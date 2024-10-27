@@ -7,15 +7,15 @@
 
 - name: Wait for Nomad to start
   pause:
-    seconds: 30
+    seconds: 10
     
-- name: Gather list of internal server IPs
-  set_fact:
-    nomad_server_ips: "{{ groups['tst'] | map('extract', hostvars, 'internal_ip') | join(' ') }}"
+# - name: Gather list of internal server IPs
+#   set_fact:
+#     nomad_server_ips: "{{ groups['tst'] | map('extract', hostvars, 'internal_ip') | join(' ') }}"
 
-- name: Join Nomad cluster
-  command: "nomad server join {{ nomad_server_ips }}"
-  register: join_result
+# - name: Join Nomad cluster
+#   command: "nomad server join {{ nomad_server_ips }}"
+#   register: join_result
 
 - name: Check Nomad server members
   command: nomad server members
@@ -25,9 +25,9 @@
   command: nomad node status
   register: node_status_result
 
-- name: Print join result
-  debug:
-    msg: "{{ join_result.stdout }}"
+# - name: Print join result
+#   debug:
+#     msg: "{{ join_result.stdout }}"
 
 - name: Print Nomad server members
   debug:

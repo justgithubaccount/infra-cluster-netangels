@@ -15,7 +15,14 @@
     dest: /etc/docker/daemon.json
     content: |
       {
-        "registry-mirrors": ["https://mirror.gcr.io"]
+        "log-opts": {
+          "max-size": "200m"
+      },
+        "registry-mirrors": [
+          "https://dockerhub.timeweb.cloud",
+          "https://dockerhub1.beget.com",
+          "https://mirror.gcr.io"
+        ]
       }
 
 - name: Ensure Docker is started and enabled

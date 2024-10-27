@@ -10,7 +10,7 @@ from api.vm_mng import get_vm_id_by_name
 def upload_ssh_key_to_vm(api_token, vm_name):
     vm_id = get_vm_id_by_name(api_token, vm_name)
 
-    api_url_ssh = f"https://api-ms.netangels.ru//api/v1/cloud/vms/{vm_id}/ssh/upload/"
+    api_url_ssh = f"https://api-ms.netangels.ru/api/v1/cloud/vms/{vm_id}/ssh/upload/"
 
     headers = {
         'Authorization': f'Bearer {api_token}',

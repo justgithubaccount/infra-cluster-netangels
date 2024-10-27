@@ -1,2 +1,2 @@
-consul_version: "1.18.2"
+consul_version: "1.20.0"
 log_level: "DEBUG"
