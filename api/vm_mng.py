@@ -4,30 +4,30 @@ import time
 
 from config import SSH_KEY_VALUE, SSH_KEY_ID
 
-def create_vm(api_token, name, tariff, disk_size, image, is_backup_enabled):
+def create_vm(token, vm_name, vm_tariff, vm_disk_size, vm_image, is_backup_enabled):
     api_url_wms = "https://api-ms.netangels.ru/api/v1/cloud/vms/"
-
+    
     headers = {
-        'Authorization': f'Bearer {api_token}',
-        'Content-Type': 'application/json'
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
     }
-
-    data = {
-        'name': name,
-        'tariff': tariff,
-        'disk_size': disk_size,
-        'image': image,
-        'is_backup_enabled': is_backup_enabled,
-        'key_value': SSH_KEY_VALUE,
-        'key_id': SSH_KEY_ID
+    
+    json_data = {
+        "name": vm_name,
+        "tariff": vm_tariff,
+        "disk_size": vm_disk_size,
+        "image": vm_image,
+        "is_backup_enabled": is_backup_enabled
     }
-
-    json_data = json.dumps(data)
-    response = requests.post(api_url_wms, headers=headers, data=json_data)
+    
+    print(f"JSON Data: {json_data}")
+    
+    response = requests.post(api_url_wms, headers=headers, json=json_data)
     
     if response.status_code == 201:
         return response.json()
     else:
+        print(f"Error Response: {response.text}")
         response.raise_for_status()
 
 def change_tariff(api_token, vm_name, tariff):
