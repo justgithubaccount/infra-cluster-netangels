@@ -3,13 +3,13 @@
 import requests
 import json
 
-api_key = ""
+API_KEY_NETANGELS = ""
 api_url_token = "https://panel.netangels.ru/api/gateway/token/"
 api_url_vms = "https://api-ms.netangels.ru/api/v1/cloud/vms/"
 
-def get_token(api_key):
+def get_token(API_KEY_NETANGELS):
     url = api_url_token
-    response = requests.post(url, data={"api_key": api_key})
+    response = requests.post(url, data={"API_KEY_NETANGELS": API_KEY_NETANGELS})
 
     if response.status_code == 200:
         return response.json()['token']
@@ -40,5 +40,5 @@ def create_vm(api_token, tariff, disk_size, image, is_backup_enabled):
     print("Response Body:", response.text)
 
 if __name__ == '__main__':
-    api_token = get_token(api_key)
+    api_token = get_token(API_KEY_NETANGELS)
     create_vm(api_token, 'start_1', 10, 'img_debian-bookworm', False)

@@ -1,4 +1,4 @@
-API_KEY=
+API_KEY_NETANGELS=
 
 curl -XPOST https://panel.netangels.ru/api/gateway/token/ \
-    -d 'api_key='$API_KEY'' > ./token-na.txt
+    -d 'API_KEY_NETANGELS='$API_KEY_NETANGELS'' > ./token-na.txt

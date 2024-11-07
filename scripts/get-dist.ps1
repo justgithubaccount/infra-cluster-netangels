@@ -5,7 +5,7 @@ function Get-Token {
     )
 
     $body = @{
-        api_key = $ApiKey
+        API_KEY_NETANGELS = $ApiKey
     }
     
     try {
