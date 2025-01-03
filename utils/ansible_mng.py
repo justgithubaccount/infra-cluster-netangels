@@ -19,7 +19,9 @@ def get_inventory_path(env_type):
     return inventory_path
 
 def update_inventory(api_token, vm_name, vm_ip, vm_type, env_type):
-    print(f"\n[INFO] Updating inventory for VM: {vm_name}, IP: {vm_ip}, Type: {vm_type}, Environment: {env_type}")
+    # print(f"\n[INFO] Updating inventory for VM: {vm_name}, IP: {vm_ip}, Type: {vm_type}, Environment: {env_type}")
+    print(f"\n[INFO] Updating inventory for VM: {vm_name}, Type: {vm_type}, Environment: {env_type}")
+
     inventory_path = get_inventory_path(env_type)
     if not inventory_path:
         print(f"[ERROR] Invalid environment type specified: {env_type}. Skipping inventory update.")
@@ -27,7 +29,9 @@ def update_inventory(api_token, vm_name, vm_ip, vm_type, env_type):
     
     vm_lan_ip = get_vm_lan_ip(api_token, vm_name)
     section = f"nomad_consul_{vm_type}s"
-    entry = f'{vm_name} ansible_host={vm_ip} internal_ip={vm_lan_ip}\n'
+    # entry = f'{vm_name} ansible_host={vm_ip} internal_ip={vm_lan_ip}\n'
+    entry = f'{vm_name} internal_ip={vm_lan_ip}\n'
+
     print(f"[DEBUG] Inventory entry to add: {entry.strip()}")
     
     # Проверка существования файла и создание, если необходимо

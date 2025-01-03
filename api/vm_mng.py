@@ -14,6 +14,8 @@ def create_vm(token, vm_name, vm_tariff, vm_disk_size, vm_image, is_backup_enabl
     json_data = {
         "name": vm_name,
         "tariff": vm_tariff,
+        "ipv4_count": 0,
+        "ipv6_count": 0,
         "disk_size": vm_disk_size,
         "image": vm_image,
         "is_backup_enabled": is_backup_enabled
