@@ -31,11 +31,11 @@ def create_cluster(api_token, num_servers, num_clients, tariff_nvme, golden_img,
             print(f"[WARNING] Setup failed for client: {client_name}. Skipping inventory update.")
 
     # Run playbook after all VMs are ready
-    print("\n[INFO] Running playbook to set up Consul and Nomad on the cluster")
-    try:
-        run_playbook(env_type, 'consul_nomad_setup')
-        print("[SUCCESS] Playbook execution completed.")
-    except Exception as e:
-        print(f"[ERROR] Playbook execution failed: {str(e)}")
+    # print("\n[INFO] Running playbook to set up Consul and Nomad on the cluster")
+    # try:
+    #     run_playbook(env_type, 'consul_nomad_setup')
+    #     print("[SUCCESS] Playbook execution completed.")
+    # except Exception as e:
+    #     print(f"[ERROR] Playbook execution failed: {str(e)}")
 
     print(f"--- Cluster creation completed for environment: {env_type} ---\n")
